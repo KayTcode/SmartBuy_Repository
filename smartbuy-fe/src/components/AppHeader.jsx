@@ -4,7 +4,6 @@ import { useLocale } from '../i18n/LocaleContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useCart } from '../contexts/CartContext.jsx';
 import { formatVND } from '../utils/currency.js';
-import logoSrc from '../../public/assets/logo.png';
 import {
   IconArrowRight,
   IconCart,
@@ -127,7 +126,7 @@ function AppHeader({ activePage = 'home', onNavigate = () => {} }) {
       <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-2">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
-            <img src={logoSrc} alt="Smart Buy" className="h-[100px] w-[100px] "/>
+            <img src="/assets/logo.png" alt="Smart Buy" className="h-[100px] w-[100px] "/>
           </div>
 
           <form className="relative flex w-full max-w-2xl items-center rounded-full border border-slate-200 bg-white pl-5 pr-1 shadow-sm shadow-slate-200/40">

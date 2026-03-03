@@ -2,25 +2,39 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import apiClient from '../../services/apiClient';
 import { IconFolder } from '../../components/icons';
+import Pagination from '../../components/Pagination';
 
 function Categories() {
   const { token } = useAuth();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 9;
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [currentPage]);
 
   const fetchCategories = async () => {
     try {
       setLoading(true);
       setError('');
-      const response = await apiClient.get('/categories');
+      const response = await apiClient.get('/categories', {
+        params: { page: currentPage, limit: itemsPerPage }
+      });
       // Handle different response structures
       const categoriesData = response.data?.data || response.data || [];
       setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+      
+      // Calculate total pages if pagination info is available
+      if (response.data?.pagination) {
+        setTotalPages(response.data.pagination.pages || 1);
+      } else {
+        const total = response.data?.total || categoriesData.length;
+        setTotalPages(Math.ceil(total / itemsPerPage));
+      }
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError(err.response?.data?.message || 'Không thể tải danh sách danh mục');
@@ -75,6 +89,14 @@ function Categories() {
             </div>
           ))}
         </div>
+      )}
+      
+      {categories.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

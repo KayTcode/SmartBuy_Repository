@@ -3,22 +3,34 @@ import { useAuth } from '../../contexts/AuthContext';
 import { ordersAPI } from '../../services/api';
 import { formatVND } from '../../utils/currency';
 import { getStatusColor, getStatusText, statusOptions } from '../../utils/orderStatus';
+import Pagination from '../../components/Pagination';
 
 function Orders() {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [currentPage]);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await ordersAPI.getAll({}, token);
+      const response = await ordersAPI.getAll({ page: currentPage, limit: itemsPerPage }, token);
       setOrders(response.data || []);
+      
+      // Calculate total pages if pagination info is available
+      if (response.pagination) {
+        setTotalPages(response.pagination.pages || 1);
+      } else {
+        const total = response.total || (response.data || []).length;
+        setTotalPages(Math.ceil(total / itemsPerPage));
+      }
     } catch (err) {
       console.error('Error fetching orders:', err);
       setError('Không thể tải danh sách đơn hàng');
@@ -111,6 +123,12 @@ function Orders() {
             ))}
           </tbody>
         </table>
+        
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

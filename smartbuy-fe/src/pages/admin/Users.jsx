@@ -1,27 +1,40 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import apiClient from '../../services/apiClient';
+import Pagination from '../../components/Pagination';
 
 function Users() {
   const { token } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [currentPage]);
 
   const fetchUsers = async () => {
     try {
       setLoading(true);
       setError('');
       const response = await apiClient.get('/users', {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        params: { page: currentPage, limit: itemsPerPage }
       });
       // Handle different response structures
       const usersData = response.data?.data?.users || response.data?.data || response.data?.users || response.data || [];
       setUsers(Array.isArray(usersData) ? usersData : []);
+      
+      // Calculate total pages if pagination info is available
+      if (response.data?.pagination) {
+        setTotalPages(response.data.pagination.pages || 1);
+      } else {
+        const total = response.data?.total || usersData.length;
+        setTotalPages(Math.ceil(total / itemsPerPage));
+      }
     } catch (err) {
       console.error('Error fetching users:', err);
       setError(err.response?.data?.message || 'Không thể tải danh sách người dùng');
@@ -87,6 +100,12 @@ function Users() {
               ))}
             </tbody>
           </table>
+          
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
     </div>

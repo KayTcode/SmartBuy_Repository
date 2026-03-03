@@ -114,7 +114,7 @@ function EatClean() {
                 price: 45000,
                 unit: "300g",
                 image:
-                    "public/assets/img_product/ucga.jpg",
+                    "/assets/img_product/ucga.jpg",
             },
             {
                 id: 2,
@@ -127,7 +127,7 @@ function EatClean() {
                 price: 85000,
                 unit: "250g",
                 image:
-                    "public/assets/img_product/cahoi.jpg",
+                    "/assets/img_product/cahoi.jpg",
             },
             {
                 id: 3,
@@ -140,7 +140,7 @@ function EatClean() {
                 price: 28000,
                 unit: "10 quả",
                 image:
-                    "public/assets/img_product/trungga.jpg",
+                    "/assets/img_product/trungga.jpg",
             },
             {
                 id: 4,
@@ -153,7 +153,7 @@ function EatClean() {
                 price: 16000,
                 unit: "1 cây",
                 image:
-                    "public/assets/img_product/bongcaixanh.jpg",
+                    "/assets/img_product/bongcaixanh.jpg",
             },
             {
                 id: 5,
@@ -166,7 +166,7 @@ function EatClean() {
                 price: 55000,
                 unit: "500g",
                 image:
-                    "public/assets/img_product/yenmach.jpg",
+                    "/assets/img_product/yenmach.jpg",
             },
             {
                 id: 6,
@@ -179,7 +179,7 @@ function EatClean() {
                 price: 20000,
                 unit: "1kg",
                 image:
-                    "public/assets/img_product/khoailang.jpg"
+                    "/assets/img_product/khoailang.jpg"
             },
             {
                 id: 7,
@@ -192,7 +192,7 @@ function EatClean() {
                 price: 65000,
                 unit: "300g",
                 image:
-                    "public/assets/img_product/hatchia.jpg",
+                    "/assets/img_product/hatchia.jpg",
             },
             {
                 id: 8,
@@ -205,7 +205,7 @@ function EatClean() {
                 price: 30000,
                 unit: "4 hộp",
                 image:
-                    "public/assets/img_product/suachuakhongduong.jpg",
+                    "/assets/img_product/suachuakhongduong.jpg",
             },
         ],
         []

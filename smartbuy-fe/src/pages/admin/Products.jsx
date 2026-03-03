@@ -2,26 +2,39 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { productsAPI } from '../../services/api';
 import { formatVND } from '../../utils/currency';
+import Pagination from '../../components/Pagination';
 
 function Products() {
   const { token } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [currentPage]);
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
       setError('');
-      const response = await productsAPI.getAll();
+      const response = await productsAPI.getAll({ page: currentPage, limit: itemsPerPage });
       console.log('Products response:', response); // Debug
       // Handle different response structures
       const productsData = response.data || response || [];
       setProducts(Array.isArray(productsData) ? productsData : []);
+      
+      // Calculate total pages if pagination info is available
+      if (response.pagination) {
+        setTotalPages(response.pagination.pages || 1);
+      } else {
+        // If no pagination, calculate based on total items
+        const total = response.total || productsData.length;
+        setTotalPages(Math.ceil(total / itemsPerPage));
+      }
     } catch (err) {
       console.error('Error fetching products:', err);
       setError(err.response?.data?.message || 'Không thể tải danh sách sản phẩm');
@@ -105,6 +118,12 @@ function Products() {
               ))}
             </tbody>
           </table>
+          
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
     </div>
